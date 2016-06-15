@@ -1,0 +1,8 @@
+.DS_STORE
+*.log
+*.gzip
+
+node_modules
+
+dist
+coverage
