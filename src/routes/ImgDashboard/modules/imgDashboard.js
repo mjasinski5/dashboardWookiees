@@ -8,11 +8,13 @@ export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
 export const RECEIVE_IMAGES = 'RECEIVE_IMAGES';
 export const SET_CURRENT_IMAGE_INDEX = 'SET_CURRENT_IMAGE_INDEX';
 export const SET_VIEW_MODE = 'SET_VIEW_MODE';
+export const SET_INTERVAL = 'SET_INTERVAL'
+export const DELETE_INTERVAL = 'DELETE_INTERVAL';
 // ------------------------------------
 // Actions
 // ------------------------------------
 
-getRandomInt(min, max) {
+function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -31,6 +33,20 @@ export function setViewMode(mode = 'rotate') {
   }
 }
 
+export function setInterval2(interval = undefined) {
+  return {
+    type: SET_INTERVAL,
+    interval
+  }
+}
+
+export function deleteInterval(interval = undefined) {
+  return {
+    type: DELETE_INTERVAL,
+    interval
+  }
+}
+
 export function setCurrentImageIndex(index = 0) {
   return {
     type: SET_CURRENT_IMAGE_INDEX,
@@ -44,7 +60,23 @@ function transformImageData(response) {
   })
 }
 
+
+export function fetchIfNecessary() {
+  return (dispatch, getState) => {
+    const images = getState().imgDashboard.get('images');
+    console.log('images', images);
+
+    if(!images) {
+      return dispatch(fetchImages());
+    }
+    else return Promise.resolve();
+
+  }
+}
+
+
 export function fetchImages() {
+  console.log('fetcg');
   const options = {
     method: 'GET',
     headers: {
@@ -58,22 +90,54 @@ export function fetchImages() {
       .then(json => transformImageData(json))
       .then(data => dispatch(receiveImages(data)))
       .catch(err => console.log(err));
+  }
+}
 
+export function setupImgDashboard() {
+  return (dispatch, getState) => {
+    return dispatch(fetchIfNecessary())
+      .then(() => dispatch(setRotationIntervalIfNecessary()));
+  }
+}
+
+export function setRotationIntervalIfNecessary() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    if(!state.interval)
+      return dispatch(setRotationInterval());
+    else return Promise.resolve();
   }
 
 }
-
 export function setRotationInterval() {
+  return (dispatch, getState) => {
+    dispatch(fetchIfNecessary())
+      .then(() => {
+        const state = getState();
+        const images = state.imgDashboard.get('images');
 
-  return (dispatch) => {
-    const interval = setInterval(() => {
-      const length = this.props.images.length;
-      const randomNumber = this.getRandomInt(0, length - 1);
+        const interval = setInterval(() => {
+          const length = images.toJS().length;
+          const randomNumber = getRandomInt(0, length - 1);
 
-      this.props.setCurrentImageIndex(randomNumber);
+          dispatch(setCurrentImageIndex(randomNumber));
 
-    }, 4000);
+        }, 4000);
+        return dispatch(setInterval2(interval));
+    })
+  }
+}
 
+
+export function deleteRotationInterval() {
+  return (dispatch, getState) => {
+    const state = getState();
+
+    if(state.interval) {
+      clearInterval(state.interval);
+      dispatch(deleteRotationInterval());
+    }
   }
 }
 /*  This is a thunk, meaning it is a functsion that immediately
@@ -110,7 +174,13 @@ const ACTION_HANDLERS = {
     return state.set('currentImageIndex', action.index);
   },
   [SET_VIEW_MODE]: (state, action) => {
-    return state.set('viewerMode')
+    return state.set('viewerMode', action.mode)
+  },
+  [SET_INTERVAL]: (state, action) => {
+    return state.set('interval', action.interval);
+  },
+  [DELETE_INTERVAL]: (state) => {
+    state.set('interval', undefined);
   }
 }
 

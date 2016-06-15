@@ -6,17 +6,19 @@ export default class ImgDashboard extends React.Component {
 
   static propTypes = {
     fetchImages: React.PropTypes.func.isRequired,
+    fetchIfNecessary: React.PropTypes.func.isRequired,
+    setRotationIntervalIfNecessary: React.PropTypes.func.isRequired,
     setCurrentImageIndex: React.PropTypes.func.isRequired,
+    setRotationInterval: React.PropTypes.func.isRequired,
     currentImageIndex: React.PropTypes.number,
-    images: React.PropTypes.array
+    images: React.PropTypes.array,
+    setupImgDashboard: React.PropTypes.func.isRequired
   }
-  componentDidMount() {
-    this.props.fetchImages();
-  }
+
   render() {
     return (
       <div>
-        <ImageScreen currentImageIndex={this.props.currentImageIndex} switchTime={this.props.switchTime} images={this.props.images} setCurrentImageIndex={this.props.setCurrentImageIndex}/>
+        <ImageScreen setupImgDashboard={this.props.setupImgDashboard} fetchImages={this.props.fetchIfNecessary} setRotationInterval={this.props.setRotationInterval} currentImageIndex={this.props.currentImageIndex} switchTime={this.props.switchTime} images={this.props.images} setCurrentImageIndex={this.props.setCurrentImageIndex}/>
       </div>
     )
   }

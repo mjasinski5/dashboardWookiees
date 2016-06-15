@@ -5,32 +5,24 @@ import HeaderImg from '../HeaderImg';
 
 class ImageScreen extends React.Component {
 
-  getRandomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
-  setUpInterval() {
-    this.interval = setInterval(() => {
-      const length = this.props.images.length;
-      const randomNumber = this.getRandomInt(0, length - 1);
-
-      this.props.setCurrentImageIndex(randomNumber);
-
-    }, 4000);
-  }
-
-  cleanUpIntervals() {
-    clearInterval(this.interval);
-
-  }
 
   componentDidMount() {
-    this.setUpInterval();
+    console.log('12');
+    this.props.setupImgDashboard();
+
   }
 
+  // componentDidUpdate(prevState, nextState) {
+  //   console.log('rev', prevState, nextState);
+  //   // if(prevState.images.length)
+  //   //   this.props.setRotationInterval();
+  //
+  // }
+
   componentWillUnmount() {
-    this.cleanUpIntervals();
+    //this.cleanUpIntervals();
   }
+
 
   render() {
     const imgSrc = this.props.images[this.props.currentImageIndex];
@@ -48,7 +40,10 @@ class ImageScreen extends React.Component {
 
 ImageScreen.propTypes = {
   images: React.PropTypes.array,
-  currentImageIndex: React.PropTypes.number
+  currentImageIndex: React.PropTypes.number,
+  setRotationInterval:  React.PropTypes.func.isRequired,
+  fetchImages: React.PropTypes.func.isRequired,
+  setupImgDashboard: React.PropTypes.func.isRequired
 }
 
 
