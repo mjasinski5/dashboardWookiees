@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
+import { setNextImageIndex, triggerViewMode, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
 
 /*  This is a container component. Notice it does not contain any JSX,
     nor does it import React. This component is **only** responsible for
@@ -19,13 +19,17 @@ const mapActionCreators = {
   setRotationInterval,
   deleteRotationInterval,
   setRotationIntervalIfNecessary,
-  setupImgDashboard
+  setupImgDashboard,
+  deleteRotationInterval,
+  triggerViewMode,
+  setNextImageIndex
 }
 
 const mapStateToProps = (state) => ({
   images: state.imgDashboard.get('images') ? state.imgDashboard.get('images').toJS() : [],
   currentImageIndex: state.imgDashboard.get('currentImageIndex') ? state.imgDashboard.get('currentImageIndex') : 0,
-  switchTime: state.imgDashboard.get('switchTime') ? state.imgDashboard.get('switchTime').toJS() : '0'
+  switchTime: state.imgDashboard.get('switchTime') ? state.imgDashboard.get('switchTime').toJS() : '0',
+  viewMode: state.imgDashboard.get('viewerMode') ? state.imgDashboard.get('viewerMode') : ''
 })
 
 /*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:

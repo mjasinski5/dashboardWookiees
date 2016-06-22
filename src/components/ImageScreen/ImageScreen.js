@@ -20,16 +20,22 @@ class ImageScreen extends React.Component {
   // }
 
   componentWillUnmount() {
-    //this.cleanUpIntervals();
+    console.log('unount');
+    this.props.deleteRotationInterval();
   }
 
+  onChangeHandler(el) {
+
+    console.log('setViewMode', el.target.value);
+    this.props.triggerViewMode(el.target.value)
+  }
 
   render() {
     const imgSrc = this.props.images[this.props.currentImageIndex];
 
     return (
       <div>
-      <HeaderImg />
+      <HeaderImg setNextImageIndex={this.props.setNextImageIndex} viewMode={this.props.viewMode} onChangeHandler={this.onChangeHandler.bind(this)}/>
       <div>
         {this.props.images && this.props.images.length === 0 ? 'Loading...' : <ImageSlide imageUrl={imgSrc} /> }
       </div>
@@ -43,7 +49,11 @@ ImageScreen.propTypes = {
   currentImageIndex: React.PropTypes.number,
   setRotationInterval:  React.PropTypes.func.isRequired,
   fetchImages: React.PropTypes.func.isRequired,
-  setupImgDashboard: React.PropTypes.func.isRequired
+  setupImgDashboard: React.PropTypes.func.isRequired,
+  deleteRotationInterval: React.PropTypes.func.isRequired,
+  triggerViewMode: React.PropTypes.func.isRequired,
+  viewMode: React.PropTypes.string,
+  setNextImageIndex: React.PropTypes.func.isRequired
 }
 
 
