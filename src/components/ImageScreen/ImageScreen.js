@@ -35,7 +35,7 @@ class ImageScreen extends React.Component {
 
     return (
       <div>
-      <HeaderImg setNextImageIndex={this.props.setNextImageIndex} viewMode={this.props.viewMode} onChangeHandler={this.onChangeHandler.bind(this)}/>
+      <HeaderImg setPreviousImageIndex={this.props.setPreviousImageIndex} setNextImageIndex={this.props.setNextImageIndex} viewMode={this.props.viewMode} onChangeHandler={this.onChangeHandler.bind(this)}/>
       <div>
         {this.props.images && this.props.images.length === 0 ? 'Loading...' : <ImageSlide imageUrl={imgSrc} /> }
       </div>
@@ -53,7 +53,8 @@ ImageScreen.propTypes = {
   deleteRotationInterval: React.PropTypes.func.isRequired,
   triggerViewMode: React.PropTypes.func.isRequired,
   viewMode: React.PropTypes.string,
-  setNextImageIndex: React.PropTypes.func.isRequired
+  setNextImageIndex: React.PropTypes.func.isRequired,
+  setPreviousImageIndex: React.PropTypes.func.isRequired
 }
 
 

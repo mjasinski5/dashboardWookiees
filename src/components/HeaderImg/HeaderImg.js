@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-const HeaderImg = ({onChangeHandler, viewMode, setNextImageIndex}) => (
+const HeaderImg = ({onChangeHandler, viewMode, setNextImageIndex, setPreviousImageIndex}) => (
   <div className="btn-group" data-toggle="buttons">
   <input type="radio" name="rotationMode"
          checked={viewMode === 'staticMode'}
@@ -17,7 +17,7 @@ const HeaderImg = ({onChangeHandler, viewMode, setNextImageIndex}) => (
     if(viewMode === 'staticMode'){
       return (
         <div>
-          <button className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button onClick={setPreviousImageIndex} className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
            <span className="glyphicon glyphicon-arrow-left" />
           </button>
           <button onClick={setNextImageIndex} className="btn btn-default btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,6 +34,7 @@ const HeaderImg = ({onChangeHandler, viewMode, setNextImageIndex}) => (
 HeaderImg.propTypes = {
   setNextImageIndex: React.PropTypes.func.isRequired,
   onChangeHandler: React.PropTypes.func.isRequired,
+  setPreviousImageIndex: React.PropTypes.func.isRequired,
   viewMode: React.PropTypes.string
 }
 

@@ -79,13 +79,13 @@ export function setPreviousImageIndex() {
     const state = getState();
 
     const images = state.imgDashboard.get('images');
-    const maxLength = images ? images.toJS().length - 1 : 0;
+    const length = images ? images.toJS().length : 0;
     const currentImageIndex = state.imgDashboard.get('currentImageIndex') ? state.imgDashboard.get('currentImageIndex') : 0;
-    let nextIndex = state.imgDashboard.get('currentImageIndex') + 1;
+    let previousIndex = state.imgDashboard.get('currentImageIndex') - 1;
 
-    nextIndex > maxLength ? nextIndex = 0 : '';
+    previousIndex < 0 ? previousIndex = length - 1  : '';
 
-    return dispatch(setCurrentImageIndex(nextIndex));
+    return dispatch(setCurrentImageIndex(previousIndex));
   }
 }
 

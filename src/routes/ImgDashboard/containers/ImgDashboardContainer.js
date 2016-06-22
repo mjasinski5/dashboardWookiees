@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { setNextImageIndex, triggerViewMode, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
+import { setPreviousImageIndex, setNextImageIndex, triggerViewMode, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
 
 /*  This is a container component. Notice it does not contain any JSX,
     nor does it import React. This component is **only** responsible for
@@ -22,7 +22,8 @@ const mapActionCreators = {
   setupImgDashboard,
   deleteRotationInterval,
   triggerViewMode,
-  setNextImageIndex
+  setNextImageIndex,
+  setPreviousImageIndex
 }
 
 const mapStateToProps = (state) => ({
