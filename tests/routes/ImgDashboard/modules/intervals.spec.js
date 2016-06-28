@@ -6,7 +6,7 @@ import {
 } from 'routes/ImgDashboard/modules/intervals';
 import { fromJS, Map, List } from 'immutable';
 import { default as intervalsReducer } from 'routes/ImgDashboard/modules/intervals';
-import * as imgDashboard from 'routes/ImgDashboard/modules/imgDashboard';
+import * as images from 'routes/ImgDashboard/modules/images';
 
 describe('primary checks', () => {
 
@@ -55,8 +55,8 @@ describe('(Action Creator) setRotationInterval', () => {
 
   it('setRotationInterval should call fetchIfNecessary', () => {
 
-    //const _fetchIfNecessary = sinon.spy(imgDashboard, 'fetchIfNecessary');
-    const _setCurrentImageIndex = sinon.spy(imgDashboard, 'setCurrentImageIndex');
+    //const _fetchIfNecessary = sinon.spy(images, 'fetchIfNecessary');
+    const _setCurrentImageIndex = sinon.spy(images, 'setCurrentImageIndex');
 
     return setRotationInterval()(_dispatchSpy, _getStateSpy)
       .then(() => {

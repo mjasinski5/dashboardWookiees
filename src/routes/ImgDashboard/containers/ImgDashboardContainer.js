@@ -1,8 +1,8 @@
 import { connect } from 'react-redux'
-import { setPreviousImageIndex, setNextImageIndex, setupImgDashboard, fetchImages, setCurrentImageIndex, fetchIfNecessary } from '../modules/imgDashboard'
+import { setupImgDashboard} from '../modules/imgDashboard'
 import { triggerViewMode } from '../modules/viewMode';
 import { deleteRotationInterval, setRotationInterval, setRotationIntervalIfNecessary } from '../modules/intervals';
-
+import { setPreviousImageIndex, setNextImageIndex, fetchImages, setCurrentImageIndex, fetchIfNecessary } from '../modules/images';
 import ImgDashboard from 'components/ImgDashboard'
 
 const mapActionCreators = {
@@ -20,9 +20,9 @@ const mapActionCreators = {
 }
 
 const mapStateToProps = (state) => ({
-  images: state.imgDashboard.imgDashboard.get('images') ? state.imgDashboard.imgDashboard.get('images').toJS() : [],
-  currentImageIndex: state.imgDashboard.imgDashboard.get('currentImageIndex') ? state.imgDashboard.imgDashboard.get('currentImageIndex') : 0,
-  switchTime: state.imgDashboard.imgDashboard.get('switchTime') ? state.imgDashboard.imgDashboard.get('switchTime').toJS() : '0',
+  images: state.imgDashboard.images.get('images') ? state.imgDashboard.images.get('images').toJS() : [],
+  currentImageIndex: state.imgDashboard.images.get('currentImageIndex') ? state.imgDashboard.images.get('currentImageIndex') : 0,
+  //switchTime: state.imgDashboard.imgDashboard.get('switchTime') ? state.imgDashboard.imgDashboard.get('switchTime').toJS() : '0',
   viewMode: state.imgDashboard.viewModeReducer,
 })
 

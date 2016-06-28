@@ -1,5 +1,5 @@
 import { Map, fromJS } from 'immutable';
-import { fetchIfNecessary, setCurrentImageIndex } from './imgDashboard';
+import { fetchIfNecessary, setCurrentImageIndex } from './images';
 
 export const SET_INTERVAL = 'SET_INTERVAL'
 export const DELETE_INTERVAL = 'DELETE_INTERVAL';
@@ -29,7 +29,7 @@ export function setRotationInterval() {
     dispatch(fetchIfNecessary())
       .then(() => {
         const interval = setInterval(() => {
-          const images = getState().imgDashboard.imgDashboard.get('images');
+          const images = getState().imgDashboard.images.get('images');
           const length = images.toJS().length;
 
           console.log('length', length);
