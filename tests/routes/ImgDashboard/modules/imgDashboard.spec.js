@@ -36,8 +36,7 @@ describe('(imgDashboardReducer) initial state', () => {
   it('Should be initialized with initial state', () => {
     let state = dashboardReducer(undefined, {})
 
-    expect(state.get('interval')).to.equal(undefined);
     expect(state.get('images')).to.equal(new List());
-    expect(state.get('currentImageIndex')).to.equal(-1);
+    expect(state.get('currentImageIndex')).to.equal(0);
   })
 })

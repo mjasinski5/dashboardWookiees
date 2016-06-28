@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'
 import { Map, fromJS, List } from 'immutable';
 import { default as viewModeReducer, setViewMode } from './viewMode';
+import { setRotationIntervalIfNecessary } from './intervals';
 // ------------------------------------
 // Constants
 // ------------------------------------
@@ -14,9 +15,6 @@ export const SET_NEXT_IMAGE_INDEX = 'SET_NEXT_IMAGE_INDEX';
 // Actions
 // ------------------------------------
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 
 export function receiveImages (payload = []) {
   return {
@@ -25,19 +23,6 @@ export function receiveImages (payload = []) {
   }
 }
 
-
-export function setInterval2(interval = undefined) {
-  return {
-    type: SET_INTERVAL,
-    interval
-  }
-}
-
-export function deleteInterval() {
-  return {
-    type: DELETE_INTERVAL
-  }
-}
 
 export function setCurrentImageIndex(index = 0) {
   return {
@@ -48,12 +33,12 @@ export function setCurrentImageIndex(index = 0) {
 
 export function setNextImageIndex() {
   return (dispatch, getState)  => {
-    const state = getState();
+    const state = getState().imgDashboard.imgDashboard;
 
-    const images = state.imgDashboard.get('images');
+    const images = state.get('images');
     const maxLength = images ? images.toJS().length - 1 : 0;
-    const currentImageIndex = state.imgDashboard.get('currentImageIndex') ? state.imgDashboard.get('currentImageIndex') : 0;
-    let nextIndex = state.imgDashboard.get('currentImageIndex') + 1;
+    const currentImageIndex = state.get('currentImageIndex') ? state.get('currentImageIndex') : 0;
+    let nextIndex = state.get('currentImageIndex') + 1;
 
     nextIndex > maxLength ? nextIndex = 0 : '';
 
@@ -63,38 +48,16 @@ export function setNextImageIndex() {
 
 export function setPreviousImageIndex() {
   return (dispatch, getState)  => {
-    const state = getState();
+    const state = getState().imgDashboard.imgDashboard;
 
-    const images = state.imgDashboard.get('images');
+    const images = state.get('images');
     const length = images ? images.toJS().length : 0;
-    const currentImageIndex = state.imgDashboard.get('currentImageIndex') ? state.imgDashboard.get('currentImageIndex') : 0;
-    let previousIndex = state.imgDashboard.get('currentImageIndex') - 1;
+    const currentImageIndex = state.get('currentImageIndex') ? state.get('currentImageIndex') : 0;
+    let previousIndex = state.get('currentImageIndex') - 1;
 
     previousIndex < 0 ? previousIndex = length - 1  : '';
 
     return dispatch(setCurrentImageIndex(previousIndex));
-  }
-}
-
-export function triggerViewMode(mode) {
-  return (dispatch, getState) => {
-    const state = getState();
-    const currentMode = state.imgDashboard.get('viewerMode');
-
-    if(mode === currentMode) return Promise.resolve();
-
-    dispatch(setViewMode(mode));
-
-    switch(mode) {
-      case 'staticMode':
-        //delete interval
-        console.log('1111111');
-        const deleteRotationIntervalFunc = deleteRotationInterval();
-        dispatch(deleteRotationIntervalFunc);
-        return Promise.resolve();
-      case 'rotation':
-        return dispatch(setRotationIntervalIfNecessary());
-    }
   }
 }
 
@@ -108,10 +71,10 @@ function transformImageData(response) {
 export function fetchIfNecessary() {
   return (dispatch, getState) => {
     const images = getState().imgDashboard.imgDashboard.get('images');
-    console.log('images', images);
 
     if(!images || !images.length) {
-      return dispatch(fetchImages());
+      dispatch(fetchImages());
+      return Promise.resolve();
     }
     else return Promise.resolve();
 
@@ -120,7 +83,6 @@ export function fetchIfNecessary() {
 
 
 export function fetchImages() {
-  console.log('fetcg');
   const options = {
     method: 'GET',
     headers: {
@@ -144,76 +106,8 @@ export function setupImgDashboard() {
   }
 }
 
-// export function setNextImageIndex() {
-//   return {
-//     type:
-//   }
-// }
-
-export function setRotationIntervalIfNecessary() {
-  return (dispatch, getState) => {
-    const state = getState();
-
-    if(!state.interval)
-      return dispatch(setRotationInterval());
-    else return Promise.resolve();
-  }
-
-}
-
-export function setRotationInterval() {
-  return (dispatch, getState) => {
-    dispatch(fetchIfNecessary())
-      .then(() => {
-        const state = getState();
-        const images = state.imgDashboard.imgDashboard.get('images');
-        dispatch(setCurrentImageIndex(0));
-
-        const interval = setInterval(() => {
-          const length = images.toJS().length;
-          const randomNumber = getRandomInt(0, length - 1);
-
-          dispatch(setCurrentImageIndex(randomNumber));
-
-        }, 4000);
-
-        return dispatch(setInterval2(interval));
-    })
-  }
-}
 
 
-export function deleteRotationInterval() {
-  return (dispatch, getState) => {
-
-    const state = getState();
-    const interval = state.imgDashboard.get('interval');
-
-    if(interval) {
-      clearInterval(interval);
-      return dispatch(deleteInterval());
-    }
-    else return Promise.resolve();
-  }
-}
-/*  This is a thunk, meaning it is a functsion that immediately
-    returns a function for lazy evaluation. It is incredibly useful for
-    creating async actions, especially when combined with redux-thunk!
-
-    NOTE: This is solely for demonstration purposes. In a real application,
-    you'd probably want to dispatch an action of COUNTER_DOUBLE and let the
-    reducer take care of this logic.  */
-
-// export const doubleAsync = () => {
-//   return (dispatch, getState) => {
-//     return new Promise((resolve) => {
-//       setTimeout(() => {
-//         dispatch(increment(getState().counter))
-//         resolve()
-//       }, 200)
-//     })
-//   }
-// }
 
 export const actions = {
   fetchImages
@@ -242,8 +136,7 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 const initialState = new Map(fromJS({
   images: [],
-  currentImageIndex: -1,
-  interval: undefined,
+  currentImageIndex: 0
 }));
 export default function imgDashboardReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]

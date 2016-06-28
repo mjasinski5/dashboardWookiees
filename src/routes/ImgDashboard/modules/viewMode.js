@@ -1,5 +1,5 @@
 import { Map, fromJS, List } from 'immutable';
-import { setRotationIntervalIfNecessary, deleteRotationInterval } from './imgDashboard';
+import { setRotationIntervalIfNecessary, deleteRotationInterval } from './intervals';
 
 export const DELETE_INTERVAL = 'DELETE_INTERVAL';
 export const SET_VIEW_MODE = 'SET_VIEW_MODE';

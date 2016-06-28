@@ -1,16 +1,9 @@
 import { connect } from 'react-redux'
-import { setPreviousImageIndex, setNextImageIndex, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
+import { setPreviousImageIndex, setNextImageIndex, setupImgDashboard, fetchImages, setCurrentImageIndex, fetchIfNecessary } from '../modules/imgDashboard'
 import { triggerViewMode } from '../modules/viewMode';
-/*  This is a container component. Notice it does not contain any JSX,
-    nor does it import React. This component is **only** responsible for
-    wiring in the actions and state neces'../modules/imgDashboard'sary to render a presentational
-    component - in this case, the counter:   */
+import { deleteRotationInterval, setRotationInterval, setRotationIntervalIfNecessary } from '../modules/intervals';
 
 import ImgDashboard from 'components/ImgDashboard'
-
-/*  Object of action creators (can also be function that returns object).
-    Keys will be passed as props to presentational components. Here we are
-    implementing our wrapper around increment; the component doesn't care   */
 
 const mapActionCreators = {
   fetchImages,
@@ -30,7 +23,7 @@ const mapStateToProps = (state) => ({
   images: state.imgDashboard.imgDashboard.get('images') ? state.imgDashboard.imgDashboard.get('images').toJS() : [],
   currentImageIndex: state.imgDashboard.imgDashboard.get('currentImageIndex') ? state.imgDashboard.imgDashboard.get('currentImageIndex') : 0,
   switchTime: state.imgDashboard.imgDashboard.get('switchTime') ? state.imgDashboard.imgDashboard.get('switchTime').toJS() : '0',
-  viewMode: state.imgDashboard.imgDashboard.get('viewerMode') ? state.imgDashboard.imgDashboard.get('viewerMode') : ''
+  viewMode: state.imgDashboard.viewModeReducer,
 })
 
 /*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:

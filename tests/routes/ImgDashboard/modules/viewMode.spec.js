@@ -2,7 +2,7 @@ import {
   triggerViewMode,
   setViewMode
 } from 'routes/ImgDashboard/modules/viewMode';
-import * as functions from 'routes/ImgDashboard/modules/imgDashboard';
+import * as intervals from 'routes/ImgDashboard/modules/intervals';
 import { default as viewModeReducer } from 'routes/ImgDashboard/modules/viewMode';
 import { fromJS, Map, List } from 'immutable';
 
@@ -34,7 +34,7 @@ describe('(Action Creator) triggerViewMode', () => {
 
   it('should call deleteRotationInterval when set to staticMode', () => {
 
-    const _deleteRotationInterval = sinon.spy(functions, 'deleteRotationInterval');
+    const _deleteRotationInterval = sinon.spy(intervals, 'deleteRotationInterval');
 
     return triggerViewMode('staticMode')(_dispatchSpy, _getStateSpy)
       .then(() => {
@@ -49,7 +49,7 @@ describe('(Action Creator) triggerViewMode', () => {
       viewerMode: 'staticMode'
     }, {});
 
-    const _setRotationIntervalIfNecessary = sinon.spy(functions, 'setRotationIntervalIfNecessary');
+    const _setRotationIntervalIfNecessary = sinon.spy(intervals, 'setRotationIntervalIfNecessary');
 
     return triggerViewMode('rotation')(_dispatchSpy, _getStateSpy)
       .then(() => {
