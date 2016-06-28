@@ -23,7 +23,19 @@ export default class ImgDashboard extends React.Component {
   render() {
     return (
       <div>
-        <ImageScreen setPreviousImageIndex={this.props.setPreviousImageIndex} setNextImageIndex={this.props.setNextImageIndex} viewMode={this.props.viewMode} triggerViewMode={this.props.triggerViewMode} deleteRotationInterval={this.props.deleteRotationInterval} setupImgDashboard={this.props.setupImgDashboard} fetchImages={this.props.fetchIfNecessary} setRotationInterval={this.props.setRotationInterval} currentImageIndex={this.props.currentImageIndex} switchTime={this.props.switchTime} images={this.props.images} setCurrentImageIndex={this.props.setCurrentImageIndex}/>
+        <ImageScreen  setPreviousImageIndex  =  {this.props.setPreviousImageIndex}
+                      setNextImageIndex      =  {this.props.setNextImageIndex}
+                      viewMode               =  {this.props.viewMode}
+                      triggerViewMode        =  {this.props.triggerViewMode}
+                      deleteRotationInterval =  {this.props.deleteRotationInterval}
+                      setupImgDashboard      =  {this.props.setupImgDashboard}
+                      fetchImages            =  {this.props.fetchIfNecessary}
+                      setRotationInterval    =  {this.props.setRotationInterval}
+                      currentImageIndex      =  {this.props.currentImageIndex}
+                      switchTime             =  {this.props.switchTime}
+                      images                 =  {this.props.images}
+                      setCurrentImageIndex   =  {this.props.setCurrentImageIndex}
+          />
       </div>
     )
   }

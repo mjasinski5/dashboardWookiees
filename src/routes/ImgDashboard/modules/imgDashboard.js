@@ -1,13 +1,12 @@
 import fetch from 'isomorphic-fetch'
 import { Map, fromJS, List } from 'immutable';
-
+import { default as viewModeReducer, setViewMode } from './viewMode';
 // ------------------------------------
 // Constants
 // ------------------------------------
 export const COUNTER_INCREMENT = 'COUNTER_INCREMENT'
 export const RECEIVE_IMAGES = 'RECEIVE_IMAGES';
 export const SET_CURRENT_IMAGE_INDEX = 'SET_CURRENT_IMAGE_INDEX';
-export const SET_VIEW_MODE = 'SET_VIEW_MODE';
 export const SET_INTERVAL = 'SET_INTERVAL'
 export const DELETE_INTERVAL = 'DELETE_INTERVAL';
 export const SET_NEXT_IMAGE_INDEX = 'SET_NEXT_IMAGE_INDEX';
@@ -26,12 +25,6 @@ export function receiveImages (payload = []) {
   }
 }
 
-export function setViewMode(mode = 'rotation') {
-  return {
-    type: SET_VIEW_MODE,
-    mode
-  }
-}
 
 export function setInterval2(interval = undefined) {
   return {
@@ -52,12 +45,6 @@ export function setCurrentImageIndex(index = 0) {
     index
   }
 }
-
-// export function setNextImageIndex() {
-//   return {
-//     type: SET_NEXT_IMAGE_INDEX
-//   }
-// }
 
 export function setNextImageIndex() {
   return (dispatch, getState)  => {
@@ -101,7 +88,10 @@ export function triggerViewMode(mode) {
     switch(mode) {
       case 'staticMode':
         //delete interval
-        return dispatch(deleteRotationInterval());
+        console.log('1111111');
+        const deleteRotationIntervalFunc = deleteRotationInterval();
+        dispatch(deleteRotationIntervalFunc);
+        return Promise.resolve();
       case 'rotation':
         return dispatch(setRotationIntervalIfNecessary());
     }
@@ -117,10 +107,10 @@ function transformImageData(response) {
 
 export function fetchIfNecessary() {
   return (dispatch, getState) => {
-    const images = getState().imgDashboard.get('images');
+    const images = getState().imgDashboard.imgDashboard.get('images');
     console.log('images', images);
 
-    if(!images) {
+    if(!images || !images.length) {
       return dispatch(fetchImages());
     }
     else return Promise.resolve();
@@ -149,7 +139,6 @@ export function fetchImages() {
 
 export function setupImgDashboard() {
   return (dispatch, getState) => {
-    dispatch(setViewMode());
     return dispatch(fetchIfNecessary())
       .then(() => dispatch(setRotationIntervalIfNecessary()));
   }
@@ -177,7 +166,7 @@ export function setRotationInterval() {
     dispatch(fetchIfNecessary())
       .then(() => {
         const state = getState();
-        const images = state.imgDashboard.get('images');
+        const images = state.imgDashboard.imgDashboard.get('images');
         dispatch(setCurrentImageIndex(0));
 
         const interval = setInterval(() => {
@@ -240,9 +229,6 @@ const ACTION_HANDLERS = {
   [SET_CURRENT_IMAGE_INDEX]: (state, action) => {
     return state.set('currentImageIndex', action.index);
   },
-  [SET_VIEW_MODE]: (state, action) => {
-    return state.set('viewerMode', action.mode)
-  },
   [SET_INTERVAL]: (state, action) => {
     return state.set('interval', action.interval);
   },
@@ -254,7 +240,11 @@ const ACTION_HANDLERS = {
 // ------------------------------------
 // Reducer
 // ------------------------------------
-const initialState = new Map();
+const initialState = new Map(fromJS({
+  images: [],
+  currentImageIndex: -1,
+  interval: undefined,
+}));
 export default function imgDashboardReducer (state = initialState, action) {
   const handler = ACTION_HANDLERS[action.type]
 

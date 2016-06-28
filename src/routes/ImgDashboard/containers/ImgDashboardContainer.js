@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
-import { setPreviousImageIndex, setNextImageIndex, triggerViewMode, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
-
+import { setPreviousImageIndex, setNextImageIndex, setupImgDashboard, fetchImages, setCurrentImageIndex, deleteRotationInterval, setRotationInterval, fetchIfNecessary, setRotationIntervalIfNecessary } from '../modules/imgDashboard'
+import { triggerViewMode } from '../modules/viewMode';
 /*  This is a container component. Notice it does not contain any JSX,
     nor does it import React. This component is **only** responsible for
-    wiring in the actions and state necessary to render a presentational
+    wiring in the actions and state neces'../modules/imgDashboard'sary to render a presentational
     component - in this case, the counter:   */
 
 import ImgDashboard from 'components/ImgDashboard'
@@ -27,10 +27,10 @@ const mapActionCreators = {
 }
 
 const mapStateToProps = (state) => ({
-  images: state.imgDashboard.get('images') ? state.imgDashboard.get('images').toJS() : [],
-  currentImageIndex: state.imgDashboard.get('currentImageIndex') ? state.imgDashboard.get('currentImageIndex') : 0,
-  switchTime: state.imgDashboard.get('switchTime') ? state.imgDashboard.get('switchTime').toJS() : '0',
-  viewMode: state.imgDashboard.get('viewerMode') ? state.imgDashboard.get('viewerMode') : ''
+  images: state.imgDashboard.imgDashboard.get('images') ? state.imgDashboard.imgDashboard.get('images').toJS() : [],
+  currentImageIndex: state.imgDashboard.imgDashboard.get('currentImageIndex') ? state.imgDashboard.imgDashboard.get('currentImageIndex') : 0,
+  switchTime: state.imgDashboard.imgDashboard.get('switchTime') ? state.imgDashboard.imgDashboard.get('switchTime').toJS() : '0',
+  viewMode: state.imgDashboard.imgDashboard.get('viewerMode') ? state.imgDashboard.imgDashboard.get('viewerMode') : ''
 })
 
 /*  Note: mapStateToProps is where you should use `reselect` to create selectors, ie:

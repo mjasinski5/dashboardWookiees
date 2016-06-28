@@ -10,8 +10,9 @@ export default (store) => ({
       /*  Webpack - use require callback to define
           dependencies for bundling   */
       const ImgDashboard = require('./containers/ImgDashboardContainer').default
-      const reducer = require('./modules/imgDashboard').default
-
+      // const reducer = require('./modules/imgDashboard').default
+      const reducer = require('./modules').default
+      console.log('reducer', reducer);
       /*  Add the reducer to the store on key 'counter'  */
       injectReducer(store, { key: 'imgDashboard', reducer })
 
