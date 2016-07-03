@@ -102,6 +102,7 @@ const initialState = new Map(fromJS({
   currentImageIndex: 0
 }));
 export default function imagesReducer (state = initialState, action) {
+  if(!action) action = {};
   const handler = ACTION_HANDLERS[action.type]
 
   return handler ? handler(state, action) : state

@@ -1,5 +1,6 @@
 import { Map, fromJS } from 'immutable';
 import { fetchIfNecessary, setCurrentImageIndex } from './images';
+import { setupRotationInterval } from './imgDashboard';
 
 export const SET_INTERVAL = 'SET_INTERVAL'
 export const DELETE_INTERVAL = 'DELETE_INTERVAL';
@@ -23,26 +24,28 @@ export function deleteInterval() {
   }
 }
 
-export function setRotationInterval() {
-    console.log('plx');
+export function rotateImage() {
   return (dispatch, getState) => {
-    dispatch(fetchIfNecessary())
+    const images = getState().imgDashboard.images.get('images');
+    const length = images.toJS().length;
+
+    const randomNumber = getRandomInt(0, length - 1);
+
+    dispatch(setCurrentImageIndex(randomNumber));
+  }
+}
+
+export function createRotationInterval(dispatch) {
+  return setInterval(() => {
+    dispatch(rotateImage());
+  }, 4000)
+}
+
+export function setRotationInterval() {
+  return (dispatch, getState) => {
+    return dispatch(fetchIfNecessary())
       .then(() => {
-        const interval = setInterval(() => {
-          const images = getState().imgDashboard.images.get('images');
-          const length = images.toJS().length;
-
-          console.log('length', length);
-
-          const randomNumber = getRandomInt(0, length - 1);
-
-          dispatch(setCurrentImageIndex(randomNumber));
-
-        }, 4000);
-
-        dispatch(setInterval2(interval));
-        console.log('plx2');
-
+        dispatch(setupRotationInterval());
         return Promise.resolve();
     })
   }
@@ -51,8 +54,9 @@ export function setRotationInterval() {
 export function setRotationIntervalIfNecessary() {
   return (dispatch, getState) => {
     const state = getState();
+    const interval = state.imgDashboard.intervals.get('interval');
 
-    if(!state.interval) {
+    if(!interval) {
       dispatch(setRotationInterval());
       return Promise.resolve();
     }

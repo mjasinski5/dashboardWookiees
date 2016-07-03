@@ -7,6 +7,7 @@ import {
 import { fromJS, Map, List } from 'immutable';
 import { default as intervalsReducer } from 'routes/ImgDashboard/modules/intervals';
 import * as images from 'routes/ImgDashboard/modules/images';
+import * as imgDashboardFunctions from 'routes/ImgDashboard/modules/imgDashboard';
 
 describe('primary checks', () => {
 
@@ -34,8 +35,11 @@ describe('(Action Creator) setRotationInterval', () => {
   let _globalState;
   let _dispatchSpy;
   let _getStateSpy;
+  let sandbox;
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+
     _globalState = {
       intervals: intervalsReducer(undefined, {})
     }
@@ -52,17 +56,21 @@ describe('(Action Creator) setRotationInterval', () => {
     })
   });
 
+  afterEach(() => {
+    sandbox.restore();
+  })
 
-  it('setRotationInterval should call fetchIfNecessary', () => {
 
-    //const _fetchIfNecessary = sinon.spy(images, 'fetchIfNecessary');
-    const _setCurrentImageIndex = sinon.spy(images, 'setCurrentImageIndex');
+  it('setRotationInterval should call proper functions', () => {
+
+    const _fetchIfNecessary = sandbox.spy(images, 'fetchIfNecessary');
+    const _setupRotationInterval = sandbox.spy(imgDashboardFunctions, 'setupRotationInterval');
 
     return setRotationInterval()(_dispatchSpy, _getStateSpy)
       .then(() => {
-        // _dispatchSpy.should.have.been.calledTwice;
-        // _fetchIfNecessary.should.have.been.calledOnce;
-        // _setCurrentImageIndex.should.have.been.calledOnce;
+        _dispatchSpy.should.have.been.calledTwice;
+        _fetchIfNecessary.should.have.been.calledOnce;
+        _setupRotationInterval.should.have.been.calledOnce;
 
       })
   })

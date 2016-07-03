@@ -40,3 +40,39 @@ describe('primary checks IMAGES', () => {
   });
 
 });
+
+describe('(Action Creator) setNextImageIndex', () => {
+  let _globalState
+  let _dispatchSpy
+  let _getStateSpy
+
+  beforeEach(() => {
+    _globalState = {
+      images: imagesReducer(undefined, {})
+    }
+    _dispatchSpy = sinon.spy((action) => {
+      _globalState = {
+        ..._globalState,
+        images: imagesReducer(_globalState.images, action)
+      }
+    })
+    _getStateSpy = sinon.spy(() => {
+      return _globalState
+    })
+  })
+
+  it('should set next image index', () => {
+
+    _globalState = imagesReducer({
+      currentImageIndex: 0,
+      images: [
+        { url: 'example'}
+      ]
+    })
+  })
+
+
+
+
+
+});

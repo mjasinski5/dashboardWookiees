@@ -10,8 +10,11 @@ describe('(Action Creator) triggerViewMode', () => {
   let _globalState;
   let _dispatchSpy;
   let _getStateSpy;
+  let sandbox;
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+
     _globalState = {
       viewMode: viewModeReducer(undefined, {})
     }
@@ -26,6 +29,10 @@ describe('(Action Creator) triggerViewMode', () => {
     })
   })
 
+  afterEach(() => {
+    sandbox.restore();
+  })
+
 
   it('triggerViewMode should be function and should return a function (its thunk)', () => {
     expect(triggerViewMode).to.be.a('function');
@@ -34,7 +41,7 @@ describe('(Action Creator) triggerViewMode', () => {
 
   it('should call deleteRotationInterval when set to staticMode', () => {
 
-    const _deleteRotationInterval = sinon.spy(intervals, 'deleteRotationInterval');
+    const _deleteRotationInterval = sandbox.spy(intervals, 'deleteRotationInterval');
 
     return triggerViewMode('staticMode')(_dispatchSpy, _getStateSpy)
       .then(() => {
@@ -49,7 +56,7 @@ describe('(Action Creator) triggerViewMode', () => {
       viewerMode: 'staticMode'
     }, {});
 
-    const _setRotationIntervalIfNecessary = sinon.spy(intervals, 'setRotationIntervalIfNecessary');
+    const _setRotationIntervalIfNecessary = sandbox.spy(intervals, 'setRotationIntervalIfNecessary');
 
     return triggerViewMode('rotation')(_dispatchSpy, _getStateSpy)
       .then(() => {

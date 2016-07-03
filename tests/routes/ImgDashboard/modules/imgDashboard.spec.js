@@ -1,42 +1,58 @@
 import {
-  triggerViewMode,
-  deleteRotationInterval,
-  default as dashboardReducer
+  setupImgDashboard,
+  setupRotationInterval,
 } from 'routes/ImgDashboard/modules/imgDashboard';
-import { default as indexImgDashboard } from 'routes/ImgDashboard/modules/index';
 
-import * as functions from 'routes/ImgDashboard/modules/imgDashboard';
+import * as imagesFunctions from 'routes/ImgDashboard/modules/images';
+import * as intervalsFunctions from 'routes/ImgDashboard/modules/intervals';
 
 import { List, Map, fromJS } from 'immutable';
 
-describe('(Action Creator) triggerViewMode', () => {
+describe('(Action Creator) setupImgDashboard', () => {
   let _globalState
   let _dispatchSpy
   let _getStateSpy
+  let sandbox;
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
     _globalState = {
-      imgDashboard: new Map(fromJS(dashboardReducer(undefined, {})))
     }
+
     _dispatchSpy = sinon.spy((action) => {
-      _globalState = {
-        ..._globalState,
-        imgDashboard: dashboardReducer(_globalState.imgDashboard, action)
-      }
+      if(typeof action === 'function') return Promise.resolve();
     })
     _getStateSpy = sinon.spy(() => {
       return _globalState
     })
   })
 
-
-})
-
-describe('(imgDashboardReducer) initial state', () => {
-  it('Should be initialized with initial state', () => {
-    let state = dashboardReducer(undefined, {})
-
-    expect(state.get('images')).to.equal(new List());
-    expect(state.get('currentImageIndex')).to.equal(0);
+  afterEach(() => {
+    sandbox.restore();
   })
+
+  it('Should call proper functions', () => {
+    const _fetchIfNecessary = sandbox.spy(imagesFunctions, 'fetchIfNecessary')
+    const _setRotationIntervalIfNecessary = sandbox.spy(intervalsFunctions, 'setRotationIntervalIfNecessary')
+
+    return setupImgDashboard()(_dispatchSpy, _getStateSpy)
+      .then(() => {
+        _dispatchSpy.should.have.been.calledTwice;
+        _fetchIfNecessary.should.have.calledOnce;
+        _setRotationIntervalIfNecessary.should.have.calledOnce;
+
+      })
+
+    });
+
+  it('setupRotationInterval should call proper functions', () => {
+    const _createRotationInterval = sandbox.spy(intervalsFunctions, 'createRotationInterval');
+    const _setInterval2 = sandbox.spy(intervalsFunctions, 'setInterval2');
+
+    return setupRotationInterval()(_dispatchSpy, _getStateSpy)
+      .then(() => {
+        _createRotationInterval.should.have.calledOnce;
+      })
+  });
+
 })
